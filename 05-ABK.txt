@@ -1,0 +1,137 @@
+Cyberbezpieczeństwo, I Stopień, I Semestr
+
+Interpretery i skrypty cz. 1
+
+Zadania:
+1.
+
+zmienna noclobber nie jest zdefiniowana. Dzięki tej funkcji plik nie jest nadpisywany, wtedy należy użyć >|
+
+$ set -o noclobber
+
+
+2.
+
+$ ./wyjscia 1> std.txt 2> err.txt
+
+$ ./wyjscia &> razem.txt
+
+
+3.
+Korzystając z komendy set, sprawdź, ile ostatnio wydanych komend
+pamiętanych jest w shellu. Sprawdź, jakie komendy zostały ostatnio
+wydane. Zmień wartość zmiennej środowiskowej, odpowiadającej za tę
+wartość, na 20000.
+
+$ set | grep HISTSIZE -> HISTSIZE=1000
+
+$ HISTSIZE=20000
+
+
+4.
+Sprawdź, w jakim pliku pamiętana jest historia poleceń. Sprawdź listę
+historii poleceń komendą history. Wykonaj raz jeszcze ostatnie polece-
+nie rozpoczynające się od konkretnego znaku (składnia: !polecenie)
+oraz polecenie o konkretnym numerze.
+
+$ set | grep HISTFILE
+	HISTFILE=/home/julia/.bash_history
+
+$ history -> pokaże historię poleceń
+
+$ !! -> pokaże ostatnio robione polecenie -> history
+
+$ !s -> set | grep HISTSIZE -> pokazuje ostatnio wykonane polecenie na literę "s"
+
+$ !1624 -> history
+
+
+5.
+Istnieje zmienna środowiskowa, której wartość oznacza dopuszczalny
+czas pozostawienia terminala w bezczynności. Po upływie tego czasu
+system automatycznie zrywa sesję i odłącza użytkownika od systemu.
+Uruchom interpreter interaktywny i sprawdź działanie zmiennej
+TMOUT. W jakich jednostkach podawany jest czas bezczynności? 
+
+$ bash
+
+$ TMOUT=4 -> interpreter wyłączy się po 4 sekundach bezczynności
+
+Czas podawany jest w sekundach
+
+
+6.
+Uruchom powłokę Bash ponownie. Zmienna środowiskowa IGNORE-
+EOF, jeśli jest ustawiona (poleceniem export IGNOREEOF), zapobiega
+kończeniu pracy interpretera poleceń (wylogowywaniu się) przez naci-
+śnięcie kombinacji klawiszy Ctrl-d.
+
+$ bash
+$ IGNOREEOF=3 -> spowoduje, że dopiero za 4 razem, gdy 
+	naciśniemy ctrl-d zostaniemy odłączeni od systemu
+
+
+7. 
+Zmienna środowiskowa PATH przechowuje ścieżki dostępu do kata-
+logów, w których interpreter poszukuje programów do wykonania. Ze
+względów bezpieczeństwa nie ma w niej katalogu bieżącego. Zmodyfikuj
+wartość zmiennej PATH tak, aby ścieżka dostępu do katalogu bieżącego
+znalazła się na końcu ścieżek w tej zmiennej.
+
+$ PATH=$PATH:$PWD 
+
+$ echo $PATH -> /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:
+	/sbin:/bin:/usr/local/games:/usr/games:/home/julia/c3
+
+
+8.
+Ustaw wartość zmiennej PS1 tak, aby znak zachęty zawierał informacje
+o nazwie użytkownika, nazwie hosta, czasie w formacie 24-godzinnym
+oraz ścieżki dostępu do bieżącego katalogu. Zmień również postać PS2.
+
+$ PS1='\u@\h \A \w \$ '
+
+$ PS2='!'
+
+
+9.
+Sprawdź listę już zdefiniowanych aliasów.
+Dodaj własny, o nazwie ll i postaci:
+Dlaczego, pomimo wymuszenia kolorowania nazw plików, pojawiają
+się one bez kolorów? Popraw alias, aby działał poprawnie.
+
+$ alias
+
+$ alias ll='ls -al --color=always | less -R'
+
+
+10.
+
+$ echo export PS1='\u@\h \A \w \$' >> $HOME/.profile -> doda linijkę do pliku
+
+$ echo alias ll='ls -al --color=always | less -R' >> /etc/bashrc
+
+$ echo export IGNOREEOF=4 >> $HOME/.bashrc
+
+$ echo export TMOUT=10 >> $HOME/.bashrc
+
+
+Zadania sprawdzające:
+1.
+Jak „doświadczalnie” sprawdzić, jaki jest znak kontynucji (PS2)?
+
+Wystarczy otworzyć nawias i wcisnąć Enter. Znak na początku nowej lini to znak kontynuacji
+
+
+2.
+Ile jest w systemie zmiennych, które nie są eksportowane do środowiska
+potomnego?
+
+$ echo $(($(set | awk '/^[[:upper:]]/ {print}' | wc -l) - $(env | awk '/^[[:upper:]]/ {print}' | wc -l))) -> 39
+
+
+3.
+Jak uruchomić nowy interpreter interaktywny?
+
+$ tmux
+

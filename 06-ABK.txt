@@ -1,0 +1,287 @@
+Cyberbezpieczeństwo, I Stopień, I Semestr
+
+Interpretery i skrypty cz. 2
+
+Zadania:
+1.
+Zmodyfikuj podany wcześniej skrypt do wypisywania argumentów
+tak, by w razie braku jakiegokolwiek argumentu w wywołaniu wypisał
+stosowny komunikat i zakończył działanie. Uruchom skrypt poprzez
+wydanie polecenia bash -vx skrypt.sh – gdzie skrypt.sh to
+stworzony wcześniej program. Co można zauważyć w komunikatach
+„debugowania”?
+
+if (( $# != 1 )); 
+then
+	echo "Zla liczba argumentow"
+	exit
+elif [[ ! -f $1 ]];
+then
+	echo "Plik nie jest regularny"
+	exit
+elif (( $# -- 0 ));
+then
+	echo "Podaj argument"
+	exit
+fi
+
+
+2.
+Zapoznaj się z działaniem polecenia trap. Spróbuj napisać skrypt,
+który będzie przechwytywał kilka wybranych sygnałów (np. SIGINT)
+i wyświetlał komunikat, jaki sygnał został przechwycony.
+
+#!/bin/bash
+
+trap 'echo Przechwycilem sygnal SIGQUIT' SIGQUIT
+trap 'echo Przechwycilem sygnal SIGTSTP' SIGTSTP
+trap 'echo Przechwycilem sygnal SIGTERM' SIGTERM
+
+i=1
+while [[ i -gt 0 ]];
+do
+        i=$(( $i + 1 ))
+        echo $i
+        sleep 2
+done
+
+
+3. 
+Napisz skrypt, który przyjmuje trzy argumenty:
+Podany (argument 1.) plik kopiuje do podanego katalogu (argument 2.)
+tyle razy, ile wynosi argument 3. Na końcu nazwy każdej kopii dołącz
+sufiks -kopia- i numer kopii.
+
+
+#!/bin/bash
+
+if [[ ! -n $3 ]]; then
+        exit
+fi
+
+for ((i=1; i<=$3; i++));
+do
+        cp "$1" "$2"/"$1"-kopia-"$i"
+done
+
+
+$ ~/c6/kopia.sh kopiawynik.txt c6 3 ->
+	┌──(julia㉿kali)-[~/c6]
+	└─$ ls
+	kopiawynik.txt-kopia-1  kopiawynik.txt-kopia-2  kopiawynik.txt-kopia-3
+
+
+4.
+Napisz skrypt, który w nieskończonej pętli będzie co 3 sekundy wypisze 
+liczbę aktualnie obecnych procesów w systemie. Zakończenie działania
+skryptu powinno odbywać się poprzez kombinację klawiszy Ctrl-c.
+
+#!/bin/bash
+
+while true;
+do
+        ps -e | wc -l
+        sleep 3
+done
+
+
+5. 
+Stwórz skrypt, który jako argument wywołania otrzymuje numer UID.
+Jeśli został on uruchomiony bez argumentu, to pyta o UID użytkownika.
+Skrypt, korzystając z pliku /etc/passwd, wypisuje zawartość 5. kolum- Wykorzystaj polecenie read.
+ny linii opisującej użytkownika o podanym UID. Jeśli jako argument
+podane zostanie więcej numerów UID, wypisz analogiczną informację
+dla wszystkich wskazanych użytkowników.
+
+#!/bin/bash
+
+if [[ ! -n $1 ]];
+then
+echo "Wprowadz UID uzytkownika"
+fi
+
+for i in $*
+do
+        cat /etc/passwd | awk -F: "{ if(\$3==$i) {print \$5} }"
+done
+
+
+$ ./uid.sh 39 41 ->
+	ircd
+	Gnats Bug-Reporting System (admin)
+
+
+6.
+Utwórz skrypt, który wypisuje z katalogu, w którym został uruchomio-
+ny, nazwy wszystkich plików i katalogów z zaznaczeniem, czy jest to
+plik regularny, czy katalog. Sam skrypt powinien zostać na takiej liście
+pominięty. Dla plików wypisz dodatkowo prawa dostępu dla właściciela.
+
+#!/bin/bash
+
+echo "Pliki:"
+for i in `ls $PWD`
+do
+        if [[ -f $i ]]; then
+                echo $i
+        fi
+done
+
+echo "Foldery:"
+for i in `ls $PWD`
+do 
+        if [[ -d $i ]]; then
+                echo $i
+        fi
+done
+
+	┌──(julia㉿kali)-[~/c6]
+	└─$ ./z6.sh                                                                                                       
+	Pliki:
+	inf.sh
+	uid.sh
+	z1sp.sh
+	z2sp.sh
+	z6.sh
+	z7.sh
+	z8.sh
+	Foldery:
+
+
+7.
+Napisz skrypt, który wyświetli prawa dostępu do wskazanego jako
+argument pliku z punktu widzenia użytkownika, który wywołał skrypt.
+Jeśli nie został podany żaden argument, skrypt powinien o niego
+poprosić.
+
+#!/bin/bash
+
+if  [[ $1 ]];
+then
+        if [[ -r $1 ]];
+        then
+                echo "Mozesz odczytac plik"
+        fi
+        if [[ -w $1 ]];
+        then
+                echo "Masz prawa do zapisu"
+        fi
+        if [[ -x $1 ]];
+        then
+                echo "Masz prawa do wykonywania pliku"
+        else
+                echo "Nie masz zadnych praw"
+        fi
+fi
+
+
+$ ./z7.sh z6.sh                                                                                                    
+	Mozesz odczytac plik
+	Masz prawa do zapisu
+	Masz prawa do wykonywania pliku
+
+
+
+8. 
+Zapoznaj się z poleceniem dd. Wykonaj skrypt, który podzieli wskazany
+plik na kawałki określonej długości. Program powinien przyjmować trzy
+argumenty:
+
+
+#!/bin/bash
+
+if [[ $# != 3 ]]
+then
+        echo "Podaj prawidlowa liczbe argumentow"
+        exit
+fi
+
+x=$(find $1 -printf "%s\n")
+x=$x/$2
+x=$x+1
+
+for (( part=1; $czesc <= $x; wyn=$wyn+1))
+do
+        dd conv=noerror if=$1 of=$3/$1.$czesc bs=$2 skip=$((wyn - 1)) count=1 2>/dev/null
+done
+
+Zadania sprawdzające:
+1.
+co 2 sekundy wypisuje listę zalogowanych użytkowników razem
+z liczbą procesów, które zostały przez nich uruchomione, a w przypadku
+wciśnięcia przez użytkownika Ctrl-c wypisze aktualną datę i zakończy
+działanie.
+
+#!/bin/bash
+
+DATE=date
+$DATE
+
+while true;
+do
+        sleep 2
+        echo "Zalogowani uzytkownicy:"
+        who
+        echo "Ilosc procesow uruchomiona przez uzytkownikow:"
+        who -p | wc -l
+done
+trap 'echo $data;exit' SIGINT
+
+$ ./z1sp.sh  ->                                                                                                      
+	Zalogowani uzytkownicy:
+	julia    tty7         2022-01-09 12:58 (:0)
+	Ilosc procesow uruchomiona przez uzytkownikow:
+	0
+	^CSun 09 Jan 2022 04:20:37 PM EST
+
+
+2. 
+otrzyma ścieżki do katalogów i dla każdego z nich policzy, ile jest
+w nich (oraz rekursywnie w podkatalogach) plików regularnych,
+
+#!/bin/bash
+
+for i in $*;
+do
+        echo "Katalogow w katalogu $i jest:" 
+        find $i -maxdepth 1 -type f | wc -l
+        echo "Podkatalogow w katalogu $i jest:"
+        find $i -type f |wc -l
+done
+
+
+$ ./z2sp.sh /home/julia ~/c2 ->
+	
+	Katalogow w katalogu /home/julia jest:
+	25
+	Podkatalogow w katalogu /home/julia jest:
+	2188
+	Katalogow w katalogu /home/julia/c2 jest:
+	6
+	Podkatalogow w katalogu /home/julia/c2 jest:
+	11
+
+
+3. 
+skopiuje plik, podany jako 1. argument, do wskazanego katalogu
+docelowego, podanego jako 2. argument (skrypt powinien obsługiwać
+sytuacje wyjątkowe związane z brakiem dostępu do wskazanego pliku
+i katalogu i wyświetlać wtedy stosowne komunikaty).
+
+#!/bin/bash
+
+if [[ ! -n $2 ]]; then
+        exit
+fi
+
+if [[ -r $1 ]];
+then
+	echo "Brak dostepu do pliku"
+fi
+if [[ -w $2 ]];
+then
+	echo "Brak dostepu do katalogu"
+fi
+else;
+	cp $1 $2
+fi

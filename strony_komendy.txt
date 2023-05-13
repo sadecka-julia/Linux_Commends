@@ -1,0 +1,12 @@
+STRONY Z KOMENDAMI:
+ps - https://pl.joecomp.com/ps-command-linux
+ls - https://www.arturpyszczuk.pl/commands-ls.html
+grep - https://totylkokod.pl/baza-wiedzy/linux-komenda-grep/
+tar - https://sapientisat.pl/artykul-220-linux-podstawowe-operacje-na-archiwach-targz-tworzenie-dekompresja-aktualizacja-podglad.html
+SIGKILL i inne gówna - https://students.mimuw.edu.pl/SO/LabLinux/PROCESY/PODTEMAT_3/sygnaly.html
+
+
+
+
+
+
