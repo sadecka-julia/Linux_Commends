@@ -15,25 +15,25 @@ Witaj w repozytorium zawierającym rozwiązania zadań z systemu Linux, stworzon
 
 ## 01-ABK.md
 
-W tym folderze znajdziesz rozwiązania zadań związanych z podstawowymi komendami systemu Linux, część pierwsza.
+W tym pliku znajdziesz rozwiązania zadań związanych z podstawowymi komendami systemu Linux, część pierwsza.
 
 ## 02-ABK.md
 
-W tym folderze znajdziesz rozwiązania zadań związanych z podstawowymi komendami systemu Linux, część druga.
+W tym pliku znajdziesz rozwiązania zadań związanych z podstawowymi komendami systemu Linux, część druga.
 
 ## 03-ABK.md
 
-Ten folder zawiera rozwiązania zadań dotyczących operacji wykonywanych na systemie plików.
+ten plik zawiera rozwiązania zadań dotyczących operacji wykonywanych na systemie plików.
 
 ## 04-ABK.md
 
-W tym folderze znajdziesz rozwiązania zadań związanych z zarządzaniem procesami w systemie Linux.
+W tym pliku znajdziesz rozwiązania zadań związanych z zarządzaniem procesami w systemie Linux.
 
 ## 05-ABK.md
 
-W tym folderze znajdziesz rozwiązania zadań związanych z interpretatorami i skryptami w systemie Linux, część pierwsza.
+W tym pliku znajdziesz rozwiązania zadań związanych z interpretatorami i skryptami w systemie Linux, część pierwsza.
 
 ## 06-ABK.md
 
-W tym folderze znajdziesz rozwiązania zadań związanych z interpretatorami i skryptami w systemie Linux, część druga.
+W tym pliku znajdziesz rozwiązania zadań związanych z interpretatorami i skryptami w systemie Linux, część druga.
 
